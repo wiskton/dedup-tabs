@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Dedup Tabs — Painel</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header>
+  <h1 style="margin:0">Dedup Tabs</h1>
+  <nav><button id="tabAbas" class="sel">Abas abertas</button><button id="tabFavs">Favoritos</button></nav>
+  <span class="esp" style="flex:1"></span>
+  <label class="dim"><input type="checkbox" id="ignorarQuery"> Ignorar parâmetros da URL (?...)</label>
+</header>
+<main>
+  <section id="secAbas">
+    <div class="barra">
+      <span id="resAbas" class="dim"></span><span class="esp"></span>
+      <button id="btnAtualizarAbas">Atualizar</button>
+      <button id="btnFecharAbas" class="perigo">Fechar abas marcadas</button>
+    </div>
+    <p class="dim">Prévia: em vermelho as abas que serão fechadas; em verde a que fica (prioridade: fixada, ativa, mais antiga). Desmarque o que quiser manter.</p>
+    <div id="listaAbas"></div>
+  </section>
+  <section id="secFavs" class="oculto">
+    <div class="barra">
+      <span id="resFavs" class="dim"></span><span class="esp"></span>
+      <button id="btnBackup">Exportar backup (JSON)</button>
+      <button id="btnMarcarFavs">Marcar duplicados (manter o mais antigo)</button>
+      <button id="btnExcluirFavs" class="perigo">Excluir marcados</button>
+    </div>
+    <div id="listaFavs"></div>
+  </section>
+</main>
+<script type="module" src="panel.js"></script>
+</body></html>

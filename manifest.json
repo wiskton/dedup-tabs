@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Dedup Tabs & Favoritos",
+  "version": "1.0.0",
+  "description": "Fecha abas repetidas com prévia e encontra favoritos duplicados, mostrando a pasta de cada um para excluir em um painel.",
+  "permissions": ["tabs", "bookmarks", "storage"],
+  "action": {
+    "default_title": "Dedup Tabs",
+    "default_popup": "src/popup.html"
+  },
+  "options_page": "src/panel.html",
+  "minimum_chrome_version": "110"
+}
