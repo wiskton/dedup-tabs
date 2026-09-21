@@ -23,9 +23,11 @@ Favoritos: a marcação automática mantém o **mais antigo** de cada grupo.
 
 O Chrome só deixa capturar a imagem da aba **visível**. Por isso um serviço em segundo plano (`src/background.js`) grava uma miniatura reduzida de cada aba quando você a visita, e o painel mostra a última gravada. Abas que você ainda não visitou depois de instalar a extensão aparecem sem imagem (só título e URL) até serem visitadas. As miniaturas ficam só no `chrome.storage.local` do navegador e são apagadas quando a aba fecha.
 
+Se a aba ainda não tem foto gravada, a prévia **carrega o próprio site como miniatura** (um iframe reduzido, sem cliques, popups nem navegação). Para isso a extensão remove `X-Frame-Options` e o `frame-ancestors` do CSP **somente nos iframes abertos pela própria extensão** (regra `declarativeNetRequest` limitada ao domínio da extensão). Como o site realmente carrega, isso conta como uma visita (cookies, contadores, vídeos que tocam sozinho); o som do iframe é bloqueado pelo navegador enquanto o painel não é interagido.
+
 ## Permissões
 
-`tabs` (ler/fechar abas), `bookmarks` (ler/excluir favoritos), `storage` e `unlimitedStorage` (miniaturas) e `<all_urls>` (necessária para o Chrome permitir a captura de tela das abas). Nada sai do navegador.
+`tabs` (ler/fechar abas), `bookmarks` (ler/excluir favoritos), `storage` e `unlimitedStorage` (miniaturas), `declarativeNetRequest` (liberar o iframe da prévia) e `<all_urls>` (necessária para o Chrome permitir a captura de tela das abas). Nada sai do navegador.
 
 ## Testes
 

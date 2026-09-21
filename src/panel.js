@@ -40,9 +40,24 @@ async function mostrarPrevia(t, ev) {
   if (guardado && guardado.url === t.url) {
     const im = el("img", "thumb"); im.src = guardado.img;
     moldura.replaceChildren(im);
-  } else {
-    moldura.textContent = "Sem prévia ainda — ela é gravada quando você visita a aba. Clique no título para ir até ela.";
+    return;
   }
+  // Sem foto gravada: carrega o próprio site como miniatura (iframe reduzido).
+  if (!/^https?:/.test(t.url)) {
+    moldura.textContent = "Esta página não pode ser exibida como miniatura.";
+    return;
+  }
+  moldura.textContent = "Carregando o site...";
+  await new Promise((r) => setTimeout(r, 250)); // evita carregar sites ao só passar o mouse por cima
+  if (meu !== tokenPrevia) return;
+  const escala = moldura.clientWidth / 1280;
+  const quadro = el("iframe", "site");
+  quadro.setAttribute("sandbox", "allow-scripts allow-same-origin"); // sem popups nem navegação do topo
+  quadro.setAttribute("referrerpolicy", "no-referrer");
+  quadro.tabIndex = -1;
+  quadro.style.transform = `scale(${escala})`;
+  quadro.src = t.url;
+  moldura.append(quadro);
 }
 function posicionarPrevia(ev) {
   const w = previa.offsetWidth || 340, h = previa.offsetHeight || 260;

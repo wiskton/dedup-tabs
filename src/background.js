@@ -49,3 +49,26 @@ chrome.runtime.onStartup.addListener(async () => {
   await chrome.storage.local.remove(Object.keys(tudo).filter((k) => k.startsWith("thumb:")));
   capturarAtivas();
 });
+
+// Permite que o painel da extensão carregue qualquer site em um iframe (miniatura ao vivo):
+// remove X-Frame-Options e o frame-ancestors do CSP, só nas requisições feitas pela própria extensão.
+async function liberarIframesDaExtensao() {
+  await chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [1],
+    addRules: [{
+      id: 1,
+      priority: 1,
+      action: {
+        type: "modifyHeaders",
+        responseHeaders: [
+          { header: "x-frame-options", operation: "remove" },
+          { header: "content-security-policy", operation: "remove" },
+          { header: "content-security-policy-report-only", operation: "remove" },
+        ],
+      },
+      condition: { resourceTypes: ["sub_frame"], initiatorDomains: [chrome.runtime.id] },
+    }],
+  });
+}
+chrome.runtime.onInstalled.addListener(liberarIframesDaExtensao);
+chrome.runtime.onStartup.addListener(liberarIframesDaExtensao);
