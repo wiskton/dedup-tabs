@@ -32,5 +32,6 @@ node teste.mjs
 ## Estrutura
 
 - `src/dedupe.js` — normalização e agrupamento (puro, testável)
+- `icons/` — ícones (regenere com `python icons/gerar_icones.py`, requer Pillow)
 - `src/popup.*` — resumo rápido
 - `src/panel.*` — painel de abas e favoritos
