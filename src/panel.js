@@ -20,6 +20,40 @@ $("ignorarQuery").onchange = () => mostrar(location.hash === "#favoritos" ? "fav
 try { $("ignorarQuery").checked = localStorage.getItem("dedup_ignorar_query") === "1"; } catch {}
 $("ignorarQuery").addEventListener("change", () => { try { localStorage.setItem("dedup_ignorar_query", $("ignorarQuery").checked ? "1" : "0"); } catch {} });
 
+// ---------------------------------------------------------------- prévia ao passar o mouse
+const previa = $("previa");
+let tokenPrevia = 0;
+
+async function mostrarPrevia(t, ev) {
+  const meu = ++tokenPrevia;
+  previa.replaceChildren();
+  const cab = el("div", "cab");
+  if (t.favIconUrl) { const ic = el("img"); ic.src = t.favIconUrl; ic.onerror = () => ic.remove(); cab.append(ic); }
+  cab.append(el("span", null, t.title || t.url));
+  const moldura = el("div", "moldura", "Carregando prévia...");
+  previa.append(cab, moldura, el("div", "url", t.url));
+  previa.classList.remove("oculto");
+  posicionarPrevia(ev);
+
+  const guardado = (await chrome.storage.local.get(`thumb:${t.id}`))[`thumb:${t.id}`];
+  if (meu !== tokenPrevia) return;
+  if (guardado && guardado.url === t.url) {
+    const im = el("img", "thumb"); im.src = guardado.img;
+    moldura.replaceChildren(im);
+  } else {
+    moldura.textContent = "Sem prévia ainda — ela é gravada quando você visita a aba. Clique no título para ir até ela.";
+  }
+}
+function posicionarPrevia(ev) {
+  const w = previa.offsetWidth || 340, h = previa.offsetHeight || 260;
+  let x = ev.clientX + 18, y = ev.clientY + 14;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - 18;
+  if (y + h > innerHeight - 8) y = Math.max(8, innerHeight - h - 8);
+  previa.style.left = `${Math.max(8, x)}px`;
+  previa.style.top = `${y}px`;
+}
+function esconderPrevia() { tokenPrevia++; previa.classList.add("oculto"); }
+
 // ---------------------------------------------------------------- abas
 let gruposAbas = [];
 const marcadasAbas = new Set(); // ids das abas que serão fechadas
@@ -37,6 +71,7 @@ async function carregarAbas() {
 }
 
 function desenharAbas(total) {
+  esconderPrevia();
   const lista = $("listaAbas");
   lista.replaceChildren();
   if (!gruposAbas.length) lista.append(el("div", "vazio", "Nenhuma aba repetida. 🎉"));
@@ -54,6 +89,9 @@ function desenharAbas(total) {
       // Clicar no título foca a aba para conferir antes de fechar.
       info.onclick = (e) => { e.preventDefault(); chrome.tabs.update(t.id, { active: true }); chrome.windows.update(t.windowId, { focused: true }); };
       info.style.cursor = "pointer";
+      row.addEventListener("mouseenter", (e) => mostrarPrevia(t, e));
+      row.addEventListener("mousemove", posicionarPrevia);
+      row.addEventListener("mouseleave", esconderPrevia);
       box.append(row);
     }
     lista.append(box);

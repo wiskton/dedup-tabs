@@ -2,7 +2,7 @@
 
 Extensão (Manifest V3, Chrome / Edge / Brave / Chromium) que:
 
-1. **Fecha abas repetidas** — antes de fechar mostra uma prévia com as abas marcadas em vermelho (FECHAR) e a que fica em verde (MANTER). Você pode desmarcar qualquer uma; clicar no título foca a aba para conferir.
+1. **Fecha abas repetidas** — antes de fechar mostra uma prévia com as abas marcadas em vermelho (FECHAR) e a que fica em verde (MANTER). Você pode desmarcar qualquer uma; clicar no título foca a aba para conferir. **Passar o mouse sobre uma aba abre uma prévia** com miniatura da página, título e URL.
 2. **Analisa os favoritos** — lista todos os sites repetidos, quantas cópias existem e em qual **pasta** cada uma está, com exclusão individual ou em lote e backup em JSON.
 
 ## Instalar (modo desenvolvedor)
@@ -19,9 +19,13 @@ Aba mantida em cada grupo: **fixada > ativa > a mais antiga**. A extensão nunca
 
 Favoritos: a marcação automática mantém o **mais antigo** de cada grupo.
 
+## Prévia ao passar o mouse
+
+O Chrome só deixa capturar a imagem da aba **visível**. Por isso um serviço em segundo plano (`src/background.js`) grava uma miniatura reduzida de cada aba quando você a visita, e o painel mostra a última gravada. Abas que você ainda não visitou depois de instalar a extensão aparecem sem imagem (só título e URL) até serem visitadas. As miniaturas ficam só no `chrome.storage.local` do navegador e são apagadas quando a aba fecha.
+
 ## Permissões
 
-`tabs` (ler/fechar abas), `bookmarks` (ler/excluir favoritos), `storage`. Nada sai do navegador.
+`tabs` (ler/fechar abas), `bookmarks` (ler/excluir favoritos), `storage` e `unlimitedStorage` (miniaturas) e `<all_urls>` (necessária para o Chrome permitir a captura de tela das abas). Nada sai do navegador.
 
 ## Testes
 
@@ -33,5 +37,6 @@ node teste.mjs
 
 - `src/dedupe.js` — normalização e agrupamento (puro, testável)
 - `icons/` — ícones (regenere com `python icons/gerar_icones.py`, requer Pillow)
+- `src/background.js` — grava as miniaturas das abas
 - `src/popup.*` — resumo rápido
 - `src/panel.*` — painel de abas e favoritos
