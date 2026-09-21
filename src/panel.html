@@ -21,7 +21,13 @@
     <div class="barra">
       <span id="resFavs" class="dim"></span><span class="esp"></span>
       <button id="btnBackup">Exportar backup (JSON)</button>
-      <button id="btnMarcarFavs">Marcar duplicados (manter o mais antigo)</button>
+      <label class="dim">Manter:
+        <select id="regraFavs">
+          <option value="antigo">o favorito mais antigo</option>
+          <option value="novo">o favorito mais novo</option>
+        </select>
+      </label>
+      <button id="btnMarcarFavs">Marcar duplicados</button>
       <button id="btnExcluirFavs" class="perigo">Excluir marcados</button>
     </div>
     <div id="listaFavs"></div>

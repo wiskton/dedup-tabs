@@ -17,7 +17,7 @@ URLs são normalizadas antes de comparar: ignora `#âncora`, `www.`, barra final
 
 Aba mantida em cada grupo: **fixada > ativa > a mais antiga**. A extensão nunca fecha todas as cópias de um mesmo site.
 
-Favoritos: a marcação automática mantém o **mais antigo** de cada grupo.
+Favoritos: você escolhe no painel se a marcação automática mantém o **favorito mais antigo** ou o **mais novo** de cada grupo (a escolha fica salva). Trocar a opção com duplicados já marcados reaplica a regra; dá para ajustar item a item antes de excluir.
 
 ## Prévia ao passar o mouse
 

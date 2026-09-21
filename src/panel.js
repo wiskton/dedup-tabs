@@ -155,7 +155,8 @@ function desenharFavs(total) {
     box.append(h);
     for (const f of g.itens) {
       const marcado = marcadosFavs.has(f.id);
-      const row = el("label", `item ${marcado ? "fechar" : ""}`);
+      const fica = !marcado && g.itens.some((o) => marcadosFavs.has(o.id));
+      const row = el("label", `item ${marcado ? "fechar" : fica ? "manter" : ""}`);
       const cb = el("input"); cb.type = "checkbox"; cb.checked = marcado;
       cb.onchange = () => { cb.checked ? marcadosFavs.add(f.id) : marcadosFavs.delete(f.id); desenharFavs(total); };
       const info = el("div", "info");
@@ -163,7 +164,9 @@ function desenharFavs(total) {
       info.append(link, el("div", "pasta", `📁 ${f.pasta}`));
       const del = el("button", null, "Excluir");
       del.onclick = async (e) => { e.preventDefault(); await excluirFavoritos([f.id], false); };
-      row.append(cb, info, del);
+      row.append(cb, info);
+      if (marcado || fica) row.append(el("span", `tag ${marcado ? "x" : "k"}`, marcado ? "EXCLUIR" : "MANTER"));
+      row.append(del);
       box.append(row);
     }
     lista.append(box);
@@ -174,11 +177,24 @@ function desenharFavs(total) {
   $("btnExcluirFavs").textContent = `Excluir ${n} marcado(s)`;
 }
 
-$("btnMarcarFavs").onclick = () => {
+// Cada grupo já vem ordenado do mais antigo para o mais novo.
+function favoritoMantido(grupo) {
+  return $("regraFavs").value === "novo" ? grupo.itens[grupo.itens.length - 1] : grupo.itens[0];
+}
+function marcarDuplicadosFavs() {
   marcadosFavs.clear();
-  gruposFavs.forEach((g) => g.itens.slice(1).forEach((f) => marcadosFavs.add(f.id)));
+  gruposFavs.forEach((g) => {
+    const manter = favoritoMantido(g);
+    g.itens.forEach((f) => { if (f !== manter) marcadosFavs.add(f.id); });
+  });
   desenharFavs(gruposFavs.reduce((n, g) => n + g.itens.length, 0));
+}
+try { $("regraFavs").value = localStorage.getItem("dedup_regra_favs") || "antigo"; } catch {}
+$("regraFavs").onchange = () => {
+  try { localStorage.setItem("dedup_regra_favs", $("regraFavs").value); } catch {}
+  if (marcadosFavs.size) marcarDuplicadosFavs(); // já havia marcação: reaplica com a nova regra
 };
+$("btnMarcarFavs").onclick = marcarDuplicadosFavs;
 $("btnExcluirFavs").onclick = () => excluirFavoritos([...marcadosFavs], true);
 
 async function excluirFavoritos(ids, confirmar) {
