@@ -1,4 +1,4 @@
-# Dedup Tabs & Favoritos
+# No Duplicate Tab
 
 Extensão (Manifest V3, Chrome / Edge / Brave / Chromium) que:
 

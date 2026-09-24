@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Dedup Tabs & Favoritos",
+  "name": "No Duplicate Tab",
   "version": "1.0.0",
   "description": "Fecha abas repetidas com prévia e encontra favoritos duplicados, mostrando a pasta de cada um para excluir em um painel.",
   "permissions": [
@@ -11,7 +11,7 @@
     "declarativeNetRequest"
   ],
   "action": {
-    "default_title": "Dedup Tabs",
+    "default_title": "No Duplicate Tab",
     "default_popup": "src/popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
